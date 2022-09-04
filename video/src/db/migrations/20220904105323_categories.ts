@@ -5,7 +5,11 @@ import { Knex } from "knex";
  * @returns { Promise<void> }
  */
 export async function up(knex: Knex): Promise<void> {
-  return knex.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"');
+  return knex.schema.createTable("categories", (table) => {
+    table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
+    table.string("category", 100).notNullable();
+    table.timestamps(false, true);
+  });
 }
 
 /**
@@ -13,5 +17,5 @@ export async function up(knex: Knex): Promise<void> {
  * @returns { Promise<void> }
  */
 export async function down(knex: Knex): Promise<void> {
-  return knex.raw('DROP DATABASE IF NOT EXISTS "uuid-ossp"');
+  return knex.schema.dropTableIfExists("categories");
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "ts-node-dev src/index.ts",
+    "start:dev": "npm run db:seed && ts-node-dev src/index.ts",
     "db:list:migration": "node_modules/.bin/knex migrate:list",
     "db:migrate": "node_modules/.bin/knex migrate:latest",
     "db:next:migrate": "node_modules/.bin/knex migrate:up",
