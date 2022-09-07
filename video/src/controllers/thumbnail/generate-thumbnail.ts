@@ -33,7 +33,7 @@ export const generateThumbnail = asyncHandler(
     const video = await videoService.findVideoById(videoId);
 
     if (!video) {
-      throw new NotFoundError("Category not found.");
+      throw new NotFoundError("Video not found.");
     }
 
     const sizes = ["64x64", "128x128", "256x256"];
@@ -56,12 +56,12 @@ export const generateThumbnail = asyncHandler(
       } else if (size === "256x256") {
         thumbs3 = await getThumbnailDetails("256x256", videoId);
       }
-      fs.unlink(path.join(__dirname, `title_${size}.png`), () => {
+      fs.unlink(path.join(__dirname, `/${size}.png`), () => {
         console.log("done");
       });
     }
 
-    thumbnailService.bulkStoreThumbnail([thumbs1, thumbs2, thumbs3]);
+    await thumbnailService.bulkStoreThumbnail([thumbs1, thumbs2, thumbs3]);
 
     res.status(200).json({
       message: "Thumbnails uploaded",

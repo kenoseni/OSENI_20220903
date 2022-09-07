@@ -7,7 +7,7 @@ type SecureUrl = {
 };
 
 export const getThumbnailDetails = async (size: string, videoId: string) => {
-  const filePath = path.join(__dirname, `${size}.png`);
+  const filePath = path.join(__dirname, `../controllers/thumbnail/${size}.png`);
   const basename = path.basename(filePath);
   const thumbs = fs.readFileSync(filePath);
   const { secure_url }: SecureUrl = await uploadImageWithStream(

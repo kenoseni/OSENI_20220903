@@ -22,12 +22,10 @@ const thumbnailService = {
       .andWhere({ name })
       .first(thumbnailFields);
   },
-  bulkStoreThumbnail(data: any[]) {
-    knex.transaction(async (trx) => {
-      for (const thumbnail of data) {
-        trx("thumbnails").insert({ ...thumbnail });
-      }
-    });
+  async bulkStoreThumbnail(data: any[]) {
+    for (const thumbnail of data) {
+      await knex("thumbnails").insert({ ...thumbnail });
+    }
   },
 };
 

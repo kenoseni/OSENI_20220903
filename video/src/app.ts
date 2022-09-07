@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import "express-async-errors";
 import { createFFmpeg } from "@ffmpeg/ffmpeg";
 // @ts-ignore
@@ -29,6 +30,14 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200,
+  })
+);
 
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/videos", videoRouter);
