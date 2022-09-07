@@ -16,6 +16,9 @@ const videoService = {
   findVideoById(id: string) {
     return knex("videos").where({ id }).first(videoFields);
   },
+  getvideos() {
+    return knex("videos").returning(videoFields);
+  },
 };
 
 export default videoService;
