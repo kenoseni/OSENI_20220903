@@ -1,4 +1,5 @@
 import { cloudinary } from "./config";
+import streamifier from "streamifier";
 
 export const uploadVideoToCloudinary = async (file: any) => {
   const fName = file.originalname.split(".")[0];
@@ -19,4 +20,23 @@ export const uploadVideoToCloudinary = async (file: any) => {
     });
 
   return secure_url;
+};
+
+export const uploadImageWithStream = async (
+  buffer: Buffer,
+  fileName: string
+): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: `thumbnail/${fileName}`,
+        upload_preset: "ml_default",
+      },
+      (error: any, result: any) => {
+        if (result) resolve(result);
+        else reject(error);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
 };

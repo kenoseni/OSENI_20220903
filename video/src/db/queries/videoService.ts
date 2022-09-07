@@ -13,6 +13,9 @@ const videoService = {
       .insert({ ...data })
       .returning(videoFields);
   },
+  findVideoById(id: string) {
+    return knex("videos").where({ id }).first(videoFields);
+  },
 };
 
 export default videoService;
