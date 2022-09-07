@@ -5,8 +5,8 @@ import { Knex } from "knex";
  * @returns { Promise<void> }
  */
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTableIfNotExists("videos", (table) => {
-    table.uuid("(id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
+  return knex.schema.createTable("videos", (table) => {
+    table.uuid("id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
     table.string("title", 1000).notNullable();
     table
       .uuid("category_id")

@@ -27,7 +27,7 @@ export const getThumbnail = asyncHandler(
       "256x256"
     );
     res.status(200).json({
-      message: "Categories successfully fetched.",
+      message: "Thumbnail successfully fetched.",
       data: thumbnail,
     });
   }

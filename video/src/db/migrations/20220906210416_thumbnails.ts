@@ -5,7 +5,7 @@ import { Knex } from "knex";
  * @returns { Promise<void> }
  */
 export async function up(knex: Knex): Promise<void> {
-  return knex.schema.createTableIfNotExists("thumbnails", (table) => {
+  return knex.schema.createTable("thumbnails", (table) => {
     table.uuid("(id").primary().defaultTo(knex.raw("uuid_generate_v4()"));
     table.string("name", 255).notNullable();
     table.string("thumbnail_url", 1000).notNullable();
