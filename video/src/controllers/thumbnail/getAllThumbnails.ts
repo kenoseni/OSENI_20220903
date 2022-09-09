@@ -7,28 +7,18 @@ import videoService from "../../db/queries/videoService";
 /**
  * @desc Get a thumbnail by video controller
  * @access Public
- * @route Get /api/v1/thumbnails/videoId
+ * @route Get /api/v1/thumbnails
  * @param {Request} req http request
  * @param {Response} res http response
  * @returns a response to the user that returns a thumbnail
  */
 
-export const getThumbnail = asyncHandler(
+export const getAllThumbnails = asyncHandler(
   async (req: Request, res: Response) => {
-    const { videoId } = req.params;
-
-    const video = await videoService.findVideoById(videoId);
-
-    if (!video) {
-      throw new NotFoundError("Category not found.");
-    }
-    const thumbnail = await thumbnailService.findThumbnailByIdAndName(
-      videoId,
-      "256x256"
-    );
+    const data = await thumbnailService.getAllThumbnails();
     res.status(200).json({
-      message: "Thumbnail successfully fetched.",
-      data: thumbnail,
+      message: "Thumbnails successfully fetched.",
+      data,
     });
   }
 );

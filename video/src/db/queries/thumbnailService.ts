@@ -22,6 +22,9 @@ const thumbnailService = {
       .andWhere({ name })
       .first(thumbnailFields);
   },
+  getAllThumbnails() {
+    return knex("thumbnails").returning(thumbnailFields);
+  },
   async bulkStoreThumbnail(data: any[]) {
     const thumbnails = [];
     for (const thumbnail of data) {
