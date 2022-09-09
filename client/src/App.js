@@ -1,4 +1,5 @@
 import { GlobalStyle } from "./styles/App.style";
+// import { Menu } from "antd";
 import { Route, Routes } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { NotFound } from "./components/pages/NotFound";
@@ -9,6 +10,9 @@ function App() {
   return (
     <>
       <GlobalStyle />
+      {/* <Menu mode="horizontal">
+        <Menu.Item key="mail">Videos</Menu.Item>
+      </Menu> */}
       <Routes>
         <Route path="/" element={<VideoLists />} />
         <Route path="/video" element={<UploadForm />} />

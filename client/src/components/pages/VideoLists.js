@@ -9,12 +9,14 @@ import { VideoListWrapper } from "../../styles/VideoList.style";
 import { Video } from "./Video";
 import useRequest from "../../hooks/useRequest";
 import { useEffectOnlyOnce } from "../../hooks/useEffectOnce";
+import { Thumbnail } from "../Thumbnail";
 
 export const VideoLists = () => {
   const navigate = useNavigate();
   useTitle("Videos");
 
   const [videos, setVideos] = useState([]);
+  const [thumbnails, setThumbnails] = useState([]);
 
   const handleVideoUpload = () => {
     navigate("/video");
@@ -22,6 +24,12 @@ export const VideoLists = () => {
 
   const { doRequest, errors } = useRequest({
     url: `${process.env.REACT_APP_PROXY}/videos`,
+    method: "get",
+    body: {},
+    onSuccess: () => {},
+  });
+  const { doRequest: getThumbnails, errors: thumnailsError } = useRequest({
+    url: `${process.env.REACT_APP_PROXY}/thumbnails`,
     method: "get",
     body: {},
     onSuccess: () => {},
@@ -35,8 +43,20 @@ export const VideoLists = () => {
         toast.error(errors);
       }
     };
+
+    const thumbnails = async () => {
+      const response = await getThumbnails();
+      setThumbnails(response.data);
+      if (thumnailsError) {
+        toast.error(errors);
+      }
+    };
+
     if (videos.length === 0) {
       getVideos();
+    }
+    if (thumbnails.length === 0) {
+      thumbnails();
     }
   }, [videos, errors, doRequest]);
   return (
@@ -54,6 +74,18 @@ export const VideoLists = () => {
             videos.map((video) => (
               <Col className="gutter-row" span={16} key={video.id}>
                 <Video video={video} />
+                {thumbnails &&
+                  thumbnails.map((thumbnail) => (
+                    <Thumbnail
+                      key={thumbnail.id}
+                      thumbnail={
+                        thumbnail.videoId === video.id &&
+                        thumbnail.name === "256x256"
+                          ? thumbnail
+                          : ""
+                      }
+                    />
+                  ))}
               </Col>
             ))}
         </Row>
