@@ -19,7 +19,6 @@ export const isValidVideoCred = (
     title: Joi.string().min(1).trim(true).required(),
     categoryId: Joi.string().trim(true).required(),
   });
-
   const { error } = schema.validate(req.body, options);
 
   if (error) {

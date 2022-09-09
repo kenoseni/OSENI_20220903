@@ -8,8 +8,6 @@ import videoService from "../../db/queries/videoService";
 import thumbnailService from "../../db/queries/thumbnailService";
 import { NotFoundError } from "../../errors/not-found-error";
 import { getThumbnailDetails } from "../../utils/thumbnail-details";
-import { uploadImageWithStream } from "../../services/cloudinary/upload";
-import { any } from "joi";
 
 /**
  * @desc thumbnail upload controller
@@ -61,10 +59,15 @@ export const generateThumbnail = asyncHandler(
       });
     }
 
-    await thumbnailService.bulkStoreThumbnail([thumbs1, thumbs2, thumbs3]);
+    const data = await thumbnailService.bulkStoreThumbnail([
+      thumbs1,
+      thumbs2,
+      thumbs3,
+    ]);
 
     res.status(200).json({
       message: "Thumbnails uploaded",
+      data,
     });
   }
 );

@@ -23,9 +23,11 @@ const thumbnailService = {
       .first(thumbnailFields);
   },
   async bulkStoreThumbnail(data: any[]) {
+    const thumbnails = [];
     for (const thumbnail of data) {
-      await knex("thumbnails").insert({ ...thumbnail });
+      thumbnails.push(thumbnail);
     }
+    return knex("thumbnails").insert(thumbnails).returning(thumbnailFields);
   },
 };
 
