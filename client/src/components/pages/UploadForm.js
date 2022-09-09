@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Toast } from "../Toast";
-import { toast } from "react-toastify";
 import axios from "axios";
 // import { UploadOutlined } from "@ant-design/icons";
-import { Form, Button, Input, Select, Progress, Spin } from "antd";
+import { Form, Button, Input, Select, Progress, Spin, message } from "antd";
 import { useEffectOnlyOnce } from "../../hooks/useEffectOnce";
 import useRequest from "../../hooks/useRequest";
+import { Thumbnail } from "../Thumbnail";
 
 const { Option } = Select;
 
@@ -18,6 +17,8 @@ export const UploadForm = () => {
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [uploadedVideo, setUploadedVideo] = useState({});
+  const [thumbnails, setThumbnails] = useState([]);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -44,13 +45,16 @@ export const UploadForm = () => {
     });
 
     if (response) {
+      message.success(response.data.message);
+      setUploadedVideo(response.data.data[0]);
+      setProgress(0);
       setLoading(false);
-      toast.success(response.data.data.message);
+      form.resetFields();
     }
   };
 
   const onFinishFailed = (errorInfo) => {
-    toast.error(errorInfo);
+    message.error(errorInfo);
   };
 
   const handleTitleChange = (e) => {
@@ -61,6 +65,32 @@ export const UploadForm = () => {
   };
   const handleFileChange = (e) => {
     setVideo(e.target.files[0]);
+  };
+
+  const generateThumbnail = async (e) => {
+    e.preventDefault();
+    const { id } = uploadedVideo;
+    if (id) {
+      const response = await axios({
+        method: "post",
+        baseURL: `${process.env.REACT_APP_PROXY}/thumbnails/${id}`,
+        headers: { "Content-Type": "application/json" },
+        onUploadProgress: (progressEvent) => {
+          setProgress(
+            parseInt(
+              Math.round((progressEvent.loaded / progressEvent.total) * 100)
+            )
+          );
+        },
+      });
+      if (response) {
+        message.success(response.data.message);
+        setThumbnails(response.data.data);
+        setProgress(0);
+        setLoading(false);
+        setUploadedVideo({});
+      }
+    }
   };
 
   const { doRequest, errors } = useRequest({
@@ -75,7 +105,7 @@ export const UploadForm = () => {
       const response = await doRequest();
       setCategories(response.data);
       if (errors) {
-        toast.error(errors);
+        message.error(errors);
       }
     };
     if (categories.length === 0) {
@@ -136,7 +166,7 @@ export const UploadForm = () => {
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button
-            type="primary"
+            type="success"
             htmlType="submit"
             disabled={loading ? true : false}
           >
@@ -145,8 +175,24 @@ export const UploadForm = () => {
           {loading && <Spin />}
         </Form.Item>
       </Form>
+
+      <div>
+        <Button
+          onClick={generateThumbnail}
+          type="warning"
+          disabled={uploadedVideo?.id ? false : true}
+        >
+          Generate Thumbnails
+        </Button>{" "}
+        {loading && <Spin />}
+      </div>
       {loading && <Progress percent={progress} status="active" />}
-      <Toast />
+      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+        {thumbnails.length > 0 &&
+          thumbnails.map((thumbnail) => (
+            <Thumbnail thumbnail={thumbnail} key={thumbnail?.id} />
+          ))}
+      </div>
     </>
   );
 };
