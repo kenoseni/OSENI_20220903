@@ -27,3 +27,9 @@ Upload Videos: POST /api/v1/videos
 There are some dependent packages installed globally, you should install them separately incase the `npm install` command didn't get them.
 
 - knex
+
+Note:
+
+```
+Cloudinary only allows file uploads up to 100MB for free accounts
+```
