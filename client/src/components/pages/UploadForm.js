@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
-// import { UploadOutlined } from "@ant-design/icons";
 import { Form, Button, Input, Select, Progress, Spin, message } from "antd";
+import { HomeOutlined } from "@ant-design/icons";
 import { useEffectOnlyOnce } from "../../hooks/useEffectOnce";
 import useRequest from "../../hooks/useRequest";
 import { Thumbnail } from "../Thumbnail";
@@ -68,6 +69,7 @@ export const UploadForm = () => {
   };
 
   const generateThumbnail = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const { id } = uploadedVideo;
     if (id) {
@@ -114,6 +116,9 @@ export const UploadForm = () => {
   }, [categories, errors, doRequest]);
   return (
     <>
+      <Link to={"/"}>
+        <Button icon={<HomeOutlined />}>Home</Button>
+      </Link>
       <Form
         encType="multipart/form-data"
         name="basic"
@@ -172,11 +177,17 @@ export const UploadForm = () => {
           >
             Submit
           </Button>{" "}
-          {loading && <Spin />}
+          {/* {loading && <Spin />} */}
         </Form.Item>
       </Form>
 
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          //   margin: "1rem 0",
+        }}
+      >
         <Button
           onClick={generateThumbnail}
           type="warning"
